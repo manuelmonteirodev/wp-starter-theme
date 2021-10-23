@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Plugin Name: WordPress Custom Option
+  Plugin Name: WordPress Custom Options
   Plugin URI: http://www.manuelmonteiro.dev
   Description: Permette di sostituire alcune opzioni e brand WordPress con quelli di mmm (compresa la dashboard utente).
   Author: MMM S.r.l.
