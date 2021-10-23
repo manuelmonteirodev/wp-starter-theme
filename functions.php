@@ -184,3 +184,9 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 if ( class_exists( 'WooCommerce' ) ) {
 	require get_template_directory() . '/inc/woocommerce.php';
 }
+
+
+/**
+ * Inserimento delle funzioni da poter personalizzare
+ */
+require get_template_directory() . '/inc/functions/enqueue.php';
