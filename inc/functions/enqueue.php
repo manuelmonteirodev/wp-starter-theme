@@ -70,7 +70,7 @@ function rimozione_menu_contestuali() {
 	remove_menu_page( 'edit.php?post_type=acf-field-group' );
 	remove_menu_page( 'admin_2020_content' );
 	remove_menu_page( 'index.php' );
-//	remove_menu_page( 'wpcf7' );
+	remove_menu_page( 'litespeed' );
 
 }
 add_action( 'admin_head', 'rimozione_menu_contestuali' );
