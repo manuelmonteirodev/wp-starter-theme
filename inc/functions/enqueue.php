@@ -73,6 +73,7 @@ function rimozione_menu_contestuali() {
 	remove_menu_page( 'litespeed' );
 	remove_menu_page( 'wppusher' );
 	remove_menu_page( 'elementor' );
+	remove_menu_page( 'elementor_library' );
 
 }
 add_action( 'admin_head', 'rimozione_menu_contestuali' );
