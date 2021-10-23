@@ -71,6 +71,7 @@ function rimozione_menu_contestuali() {
 	remove_menu_page( 'admin_2020_content' );
 	remove_menu_page( 'index.php' );
 	remove_menu_page( 'litespeed' );
+	remove_menu_page( 'wppusher' );
 
 }
 add_action( 'admin_head', 'rimozione_menu_contestuali' );
