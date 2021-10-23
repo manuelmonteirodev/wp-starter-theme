@@ -195,7 +195,7 @@ if (!class_exists('mmmBranding')) {
             global $switched;
             switch_to_blog($blog_id);
 
-            // rimuovo "Ecco un altro sito WPCerto"
+            // rimuovo "Ecco un altro sito "
             update_option('blogdescription', '');
 
             // disabilito i commenti
@@ -271,11 +271,10 @@ if (!class_exists('mmmBranding')) {
              * queste le capabilities coinvolte
              * NB è necessario attivare la funzionalità inserendo nella config:
              * 
-             * define('WPCERTO_SUPEREDITOR_CAN_MANAGE_USERS', true);
+             * define('WPMMM_SUPEREDITOR_CAN_MANAGE_USERS', true);
              * 
              * NB2: in configurazione multisite, è necessario abilitare 
              * la possibilità di creare utenti per gli admin
-             * http://wpcerto.dev/wp-admin/network/settings.php
              */
             $can_manage_users_caps = array(
                 'create_users',
@@ -287,7 +286,7 @@ if (!class_exists('mmmBranding')) {
                 'remove_users',
             );
 
-            if (defined('WPCERTO_SUPEREDITOR_CAN_MANAGE_USERS') && WPCERTO_SUPEREDITOR_CAN_MANAGE_USERS) {
+            if (defined('WPMMM_SUPEREDITOR_CAN_MANAGE_USERS') && WPMMM_SUPEREDITOR_CAN_MANAGE_USERS) {
 
                 // se la gestione degli utenti è abilitata, procedo
                 foreach ($can_manage_users_caps as $cap) {
