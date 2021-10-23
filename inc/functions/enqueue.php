@@ -113,6 +113,14 @@ function mmm_nascondo_plugins( $plugins ) {
 		unset( $plugins['advanced-custom-fields-pro/acf.php'] );
 	}
 
+	if ( is_plugin_active( 'wppusher/wppusher.php' ) ) {
+		unset( $plugins['wppusher/wppusher.php'] );
+	}
+
+	if ( is_plugin_active( 'litespeed-cache/litespeed-cache.php' ) ) {
+		unset( $plugins['litespeed-cache/litespeed-cache.php'] );
+	}
+
 	return $plugins;
 
 }
