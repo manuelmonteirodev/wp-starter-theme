@@ -80,7 +80,7 @@ add_action( 'admin_head', 'rimozione_menu_contestuali' );
 /**
  * Nascondo certi plugins ad alcuni utenti dalla lista di WP
  */
-function comunicare_nascondo_plugins( $plugins ) {
+function mmm_nascondo_plugins( $plugins ) {
 
 	// Ottengo informazioni utente corrente
 	$current_user = wp_get_current_user();
@@ -116,7 +116,7 @@ function comunicare_nascondo_plugins( $plugins ) {
 	return $plugins;
 
 }
-add_filter( 'all_plugins', 'comunicare_nascondo_plugins');
+add_filter( 'all_plugins', 'mmm_nascondo_plugins');
 
 
 /**

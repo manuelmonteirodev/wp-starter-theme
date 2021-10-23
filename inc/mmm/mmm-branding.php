@@ -1,17 +1,17 @@
 <?php
 
 /*
-  Plugin Name: WordPress Rebranding
-  Plugin URI: http://www.comunicare.agency/
-  Description: Permette di sostituire il brand WordPress con quelli di Comunicare (compresa la dashboard utente).
+  Plugin Name: WordPress Custom Option
+  Plugin URI: http://www.manuelmonteiro.dev
+  Description: Permette di sostituire alcune opzioni e brand WordPress con quelli di mmm (compresa la dashboard utente).
   Author: MMM S.r.l.
   Version: 1.0
-  Author URI: http://www.comunicare.agency/
+  Author URI: http://www.manuelmonteiro.dev/
  */
 
-if (!class_exists('comunicareBranding')) {
+if (!class_exists('mmmBranding')) {
 
-    class comunicareBranding {
+    class mmmBranding {
 
         public static function init() {
             
@@ -30,14 +30,14 @@ if (!class_exists('comunicareBranding')) {
             // personalizzo le capabilities dell'utente Editor
             add_action('admin_init', array(__class__, 'superEditor'));
             
-            // rimuovo alcune capability "critiche" (installare temi e plugin) per utenti non-comunicare
+            // rimuovo alcune capability "critiche" (installare temi e plugin) per utenti non-mmm
             add_action('wp_login', array(__CLASS__, 'removeAdminCapabilities'), 10, 2);
 
-            // aggiungo shortcode comunicareINCLUDE
-            add_shortcode('comunicareINCLUDE', array(__class__, 'comunicareIncludeShortcode'));
+            // aggiungo shortcode mmmINCLUDE
+            add_shortcode('mmmINCLUDE', array(__class__, 'mmmIncludeShortcode'));
             
             // nascondo interfaccia admin di ACF se sono in ambiente di produzione
-            add_filter('acf/settings/show_admin', array(__class__, 'showACFAdmin'));
+            // add_filter('acf/settings/show_admin', array(__class__, 'showACFAdmin'));
             
             // nascondo gli update alert in produzione
             add_action('admin_head', array(__class__, 'hide_update_notice'), 1);
@@ -50,7 +50,7 @@ if (!class_exists('comunicareBranding')) {
             add_action('wpmu_new_blog', array(__class__, 'newSiteCreated'), 10, 6);
 
             // sovrascrivo le impostazioni di phpmailer per personalizzare il server di invio, nome mittente, ecc.
-            add_action('phpmailer_init', array(__class__, 'comunicarePhpmailerOverride'));  
+            add_action('phpmailer_init', array(__class__, 'mmmPhpmailerOverride'));  
             
             // evito che vengano inviate delle mail a indirizzi @test.com
             add_filter('wp_mail', array(__class__, 'wp_mail_remove_test_com'));
@@ -64,7 +64,7 @@ if (!class_exists('comunicareBranding')) {
             // disabilito l'indice dell'autore
             add_filter('template_redirect', array(__class__, 'remove_author_page'));
             
-            // disabilito invio notifiche di cambio email utente se fatto da admin comunicare
+            // disabilito invio notifiche di cambio email utente se fatto da admin mmm
             add_filter('send_password_change_email', array(__CLASS__, 'disable_password_change_notification'));
             
             /*
@@ -125,9 +125,9 @@ if (!class_exists('comunicareBranding')) {
             global $wp_query;
             
             /*
-             * la costante comunicare_ENABLE_AUTHOR_ARCHIVE mi permette di abilitare l'archivio se necessario
+             * la costante mmm_ENABLE_AUTHOR_ARCHIVE mi permette di abilitare l'archivio se necessario
              */
-            if (is_author() && !is_404() && (!defined('comunicare_ENABLE_AUTHOR_ARCHIVE') || comunicare_ENABLE_AUTHOR_ARCHIVE === false)) {
+            if (is_author() && !is_404() && (!defined('mmm_ENABLE_AUTHOR_ARCHIVE') || mmm_ENABLE_AUTHOR_ARCHIVE === false)) {
                 $wp_query->set_404();
                 status_header(404);
                 nocache_headers();
@@ -137,10 +137,10 @@ if (!class_exists('comunicareBranding')) {
         public static function disable_password_change_notification($send) {
             
             $cu = wp_get_current_user();
-            $is_comunicareman = preg_match('/(@|\.)manuelmonteiro\.dev$/', $cu->user_email);
+            $is_mmmman = preg_match('/(@|\.)manuelmonteiro\.dev$/', $cu->user_email);
             
             // se l'utente ha mail @studioazione.it il cambio password viene fatto silenziosamente
-            if ($is_comunicareman) {
+            if ($is_mmmman) {
                 $send = false;
             }
             
@@ -312,7 +312,7 @@ if (!class_exists('comunicareBranding')) {
          * Override delle impostazioni di default del mailer, per funzionare con l'SMTP di WPCerto
          * @param Obj $phpmailer
          */
-        public static function comunicarePhpmailerOverride($phpmailer) {
+        public static function mmmPhpmailerOverride($phpmailer) {
             
             /*
              * cfr. https://www.register.it/assistenza/parametri-email/
@@ -352,9 +352,9 @@ if (!class_exists('comunicareBranding')) {
 
         static function wp_mail_remove_test_com($atts) {
             
-//            comunicarelog('wp_mail_remove_tests');
-//            comunicarelog($atts['to']);
-//            comunicarelog($atts['headers']);
+//            mmmlog('wp_mail_remove_tests');
+//            mmmlog($atts['to']);
+//            mmmlog($atts['headers']);
             
             /*
              * intercetto e modifico il destinatario principale
@@ -378,8 +378,8 @@ if (!class_exists('comunicareBranding')) {
              */
             $atts['headers'] = self::replace_test_mail($atts['headers']);
             
-//            comunicarelog($atts['to']);
-//            comunicarelog($atts['headers']);
+//            mmmlog($atts['to']);
+//            mmmlog($atts['headers']);
             
             return $atts;
         }
@@ -391,14 +391,14 @@ if (!class_exists('comunicareBranding')) {
         }
         
         /**
-         * Rimuovo alcune capability critiche per utenti non-comunicare
+         * Rimuovo alcune capability critiche per utenti non-mmm
          * 
          * @param string $user_login
          * @param WP_User $user
          */
         public static function removeAdminCapabilities($user_login, $user) {
             
-//            comunicarelog('ciao ' . $user_login);
+//            mmmlog('ciao ' . $user_login);
             
             /*
              * quanto segue ha senso solo se il ruolo dell'utente è "administrator"
@@ -410,7 +410,7 @@ if (!class_exists('comunicareBranding')) {
              * email autorizzate ad usare le capability proibite
              * sovrascrivibile per tema/plugin
              */
-            $allowed_email_domains = apply_filters('comunicare_remove_admin_capabilities_allowed_email_domains', array(
+            $allowed_email_domains = apply_filters('mmm_remove_admin_capabilities_allowed_email_domains', array(
                 '@manuelmonteiro.dev',
             ));
             
@@ -419,7 +419,7 @@ if (!class_exists('comunicareBranding')) {
              * sovrascrivibile per tema/plugin
              * cfr. https://wordpress.org/support/article/roles-and-capabilities/
              */
-            $forbidden_caps = apply_filters('comunicare_remove_admin_capabilities_forbidden_capabilities', array(
+            $forbidden_caps = apply_filters('mmm_remove_admin_capabilities_forbidden_capabilities', array(
                 'install_plugins',
                 'install_themes',
                 'switch_themes',
@@ -447,8 +447,8 @@ if (!class_exists('comunicareBranding')) {
                 }
             }
             
-//            comunicarelog('is allowed?');
-//            comunicarelog($is_allowed);
+//            mmmlog('is allowed?');
+//            mmmlog($is_allowed);
             
             /*
              * spengo/accendo le capability a seconda del valore di $is_allowed
@@ -471,12 +471,12 @@ if (!class_exists('comunicareBranding')) {
 
         /**
          * funzione per includere un pezzo di template (file .php) dentro il post
-         * shortcode [comunicareINCLUDE]
+         * shortcode [mmmINCLUDE]
          */
-        public static function comunicareIncludeShortcode($atts) {
+        public static function mmmIncludeShortcode($atts) {
 
             $atts = shortcode_atts(array(
-                'slug' => 'comunicareinclude',
+                'slug' => 'mmminclude',
                 'name' => '',
                     ), $atts);
 
@@ -497,14 +497,14 @@ if (!class_exists('comunicareBranding')) {
 
 }
 
-comunicareBranding::init();
+mmmBranding::init();
 
 
 
 
-if (!class_exists('comunicareInfoHub')) {
+if (!class_exists('mmmInfoHub')) {
     
-    class comunicareInfoHub {
+    class mmmInfoHub {
         
         static function send_data() {
             
@@ -524,7 +524,7 @@ if (!class_exists('comunicareInfoHub')) {
             $check_plugins = array(
                 'contact-form-7/wp-contact-form-7.php',
                 'wp-fail2ban/wp-fail2ban.php',
-                'comunicare-lightweight-hide-login/comunicare-lightweight-hide-login.php',
+                'mmm-lightweight-hide-login/mmm-lightweight-hide-login.php',
             );
             
             foreach ($check_plugins as $p) {
@@ -536,7 +536,7 @@ if (!class_exists('comunicareInfoHub')) {
 
             if (WP_DEBUG) {
                 
-                self::log('comunicareInfoHub: invio dati all\'endpoint:');
+                self::log('mmmInfoHub: invio dati all\'endpoint:');
                 self::log($info);
                 
             } else {
@@ -580,11 +580,11 @@ if (!class_exists('comunicareInfoHub')) {
 
         static function cron_init() {
             
-            if (!wp_next_scheduled('comunicare_infohub_schedule')) {
+            if (!wp_next_scheduled('mmm_infohub_schedule')) {
                 
-                self::log('comunicareInfoHub: setup del CRON');
+                self::log('mmmInfoHub: setup del CRON');
                 
-                wp_schedule_event(time(), 'daily', 'comunicare_infohub_schedule');
+                wp_schedule_event(time(), 'daily', 'mmm_infohub_schedule');
             }
         }
 
@@ -598,14 +598,14 @@ if (!class_exists('comunicareInfoHub')) {
             /*
              * pianifico esecuzione
              */
-            add_action('comunicare_infohub_schedule', array(__CLASS__, 'send_data'));
+            add_action('mmm_infohub_schedule', array(__CLASS__, 'send_data'));
         }
         
     }
     
 }
 
-comunicareInfoHub::init();
+mmmInfoHub::init();
 
 
 /**
@@ -616,7 +616,7 @@ if ( !function_exists('tf_wp_admin_login_logo') ) :
     function tf_wp_admin_login_logo() { ?>
         <style type="text/css">
             body.login div#login h1 a {
-                background-image: url('<?php echo get_template_directory_uri()."/img/logo_comunicare_black.png"; ?>');
+                background-image: url('<?php echo get_template_directory_uri()."/img/logo_mmm_black.png"; ?>');
 				background-size:90%;
 				width:300px;
             }
