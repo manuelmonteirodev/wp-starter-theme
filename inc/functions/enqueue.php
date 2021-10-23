@@ -24,7 +24,6 @@ function my_mmm_settings_url( $url ) {
     return MY_MMM_URL;
 }
 
-
 // Define path and URL to the ACF plugin.
 define( 'MY_ACF_PATH', get_stylesheet_directory() . '/inc/acf/' );
 define( 'MY_ACF_URL', get_stylesheet_directory_uri() . '/inc/acf/' );

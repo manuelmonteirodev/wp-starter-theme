@@ -309,88 +309,6 @@ if (!class_exists('mmmBranding')) {
         }
 
         /**
-         * Override delle impostazioni di default del mailer, per funzionare con l'SMTP di WPCerto
-         * @param Obj $phpmailer
-         */
-        public static function mmmPhpmailerOverride($phpmailer) {
-            
-            /*
-             * cfr. https://www.register.it/assistenza/parametri-email/
-             */
-            
-//            $phpmailer->isSMTP();     
-////            $phpmailer->ReplyTo = get_bloginfo('admin_email');
-//            $phpmailer->Host = 'authsmtp.securemail.pro';
-//            $phpmailer->SMTPAuth = true; // Force it to use Username and Password to authenticate
-//            $phpmailer->SMTPSecure = 'ssl';  
-//            $phpmailer->Port = 465;
-//            $phpmailer->Username = 'smtp@wpcerto.com';
-//            $phpmailer->Password = '.jknkj.kjAA65v2bjd32hbskj__23';
-//            $phpmailer->From = 'noreply@wpcerto.com';
-//            $phpmailer->FromName = get_bloginfo('name');
-            
-            $phpmailer->isSMTP();     
-//            $phpmailer->ReplyTo = get_bloginfo('admin_email');
-            $phpmailer->Host = 'smtp.mailgun.org';
-            $phpmailer->SMTPAuth = true; // Force it to use Username and Password to authenticate
-            $phpmailer->SMTPSecure = 'tls';  
-            $phpmailer->Port = 25;
-            $phpmailer->Username = 'noreply@mg.wpcerto.com';
-            $phpmailer->Password = 'Jb2j3_s2LPgs6';
-            $phpmailer->From = 'noreply@mg.wpcerto.com';
-            $phpmailer->FromName = get_bloginfo('name');
-            
-            if (empty($phpmailer->getReplyToAddresses())) {
-                $phpmailer->AddReplyTo(get_option('admin_email'), get_bloginfo('name'));
-            }            
-        } 
-        
-        private static function replace_test_mail($mail) {
-
-            return preg_replace('/@test\.com\b/', '@wpcerto.com', $mail);
-        }
-
-        static function wp_mail_remove_test_com($atts) {
-            
-//            mmmlog('wp_mail_remove_tests');
-//            mmmlog($atts['to']);
-//            mmmlog($atts['headers']);
-            
-            /*
-             * intercetto e modifico il destinatario principale
-             */
-            if (!is_array($atts['to'])) {
-                $atts['to'] = self::replace_test_mail($atts['to']);
-            } else {
-                
-                $to = array();
-                
-                foreach ($atts['to'] as $destinatario) {
-                    $to[] = self::replace_test_mail($destinatario);
-                }
-                
-                $atts['to'] = $to;
-                
-            }
-            
-            /*
-             * intercetto e modifico i vari Cc e Bcc, Reply-to ecc.
-             */
-            $atts['headers'] = self::replace_test_mail($atts['headers']);
-            
-//            mmmlog($atts['to']);
-//            mmmlog($atts['headers']);
-            
-            return $atts;
-        }
-        
-        static function init_test() {
-            
-            wp_mail(['m@manuelmonteiro.dev', 'test@test.com'], 'ciao test', 'Questo è il testo della mail.');
-            
-        }
-        
-        /**
          * Rimuovo alcune capability critiche per utenti non-mmm
          * 
          * @param string $user_login
@@ -616,9 +534,30 @@ if ( !function_exists('tf_wp_admin_login_logo') ) :
     function tf_wp_admin_login_logo() { ?>
         <style type="text/css">
             body.login div#login h1 a {
-                background-image: url('<?php echo get_template_directory_uri()."/img/logo_mmm_black.png"; ?>');
-				background-size:90%;
-				width:300px;
+                display:none;
+                
+            }
+            form#loginform {
+                border:0;
+                -webkit-box-shadow: 0px 10px 30px -10px rgba(0,0,0,.3);
+                box-shadow: 0px 10px 30px -10px rgba(0,0,0,.3);
+                border-radius:4px;
+                padding:70px 40px;
+                margin-top:50px;
+                margin-bottom:40px;
+            }
+            div#login {
+                width:500px;
+            }
+            div#login:before {
+                content: "Accedi al Pannello di Amministrazione";
+                font-size:16px;
+                position:absolute;
+                left: 50%;
+                transform: translate(-50%, -25px);
+            }
+            body.login {
+                background:#f5f5f5;
             }
         </style>
     <?php }
