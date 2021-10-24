@@ -551,6 +551,7 @@ if ( !function_exists('tf_wp_admin_login_logo') ) :
             div#login:before {
                 content: "Accedi al Pannello di Gestione";
                 font-size:16px;
+                font-weight:300;
                 position:absolute;
                 left: 50%;
                 transform: translate(-50%, -25px);
