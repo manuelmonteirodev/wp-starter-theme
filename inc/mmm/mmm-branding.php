@@ -549,7 +549,7 @@ if ( !function_exists('tf_wp_admin_login_logo') ) :
                 width:500px;
             }
             div#login:before {
-                content: "Accedi al Pannello di Amministrazione";
+                content: "Accedi al Pannello di Gestione";
                 font-size:16px;
                 position:absolute;
                 left: 50%;
