@@ -9,6 +9,11 @@ add_action('wp_default_scripts', function ($scripts) {
     }
 });
 
+/** 
+ * Disabilito aggiornamenti temi e plugin
+ */
+define( 'DISALLOW_FILE_EDIT', false );
+define( 'DISALLOW_FILE_MODS', false );
 
 
 // Define path and URL to the MMM Branding.
@@ -165,14 +170,6 @@ EOT;
     return $html;
 }
 add_filter( 'style_loader_tag', 'add_rel_preload', 10, 4 ); */
-
-
-
-/** 
- * Disabilito aggiornamenti temi e plugin
- */
-define( 'DISALLOW_FILE_EDIT', false );
-define( 'DISALLOW_FILE_MODS', false );
 
 
 
